@@ -9,12 +9,11 @@ import { loadDotEnv } from "./env.js";
 import { compositeTable, failedCycles, phaseTable } from "./table.js";
 
 /**
- * TODO(day 3, MUST land before first published run): self-hosted control
- * page with a known payload, DNS/TLS/TTFB measured separately. example.com
- * measures THEIR CDN, not the provider, and must never appear in published
- * data. Fine for development runs only.
+ * Fixed navigation target. Deployed control page (see control-page/README)
+ * isolates provider overhead from third-party CDN noise — never point
+ * published numbers at example.com.
  */
-const DEV_CONTROL_PAGE = "https://example.com";
+const CONTROL_PAGE_URL = "https://control-page-dzsxszhwb-on-chaineds-projects.vercel.app";
 
 interface Flags {
   primitive: "browser" | "sandbox";
@@ -56,7 +55,7 @@ function parseFlags(argv: string[]): Flags {
     providers: ["solari", "browserbase"],
     n: 50,
     warmup: 3,
-    url: DEV_CONTROL_PAGE,
+    url: process.env.CONTROL_PAGE_URL ?? CONTROL_PAGE_URL,
     region: "local",
     out: "data/runs",
     listProviders: false,

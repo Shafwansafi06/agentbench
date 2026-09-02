@@ -33,6 +33,15 @@ export interface ProviderMeta {
   [key: string]: unknown;
 }
 
+/**
+ * Navigation-timing breakdown measured INSIDE the provider's browser via
+ * the PerformanceNavigationTiming entry for the first_navigation event.
+ * Units: ms. Isolates the provider's network path from harness-side noise:
+ * dns/tcp/tls/ttfb/content are the provider's network; the gap between
+ * full first_navigation and the sum of these is provider overhead.
+ */
+export type NavBreakdown = Record<string, number>;
+
 /** A single measured cycle. One JSONL row. */
 export interface CycleRecord {
   schema_version: 1;
@@ -55,6 +64,8 @@ export interface CycleRecord {
   phases: PhaseSpanMap;
   /** phases not separately observable from the provider SDK */
   fused_phases: string[];
+  /** PerformanceNavigationTiming breakdown from inside the provider's browser (ms) */
+  nav_breakdown_ms?: NavBreakdown;
   error?: string;
   success: boolean;
   /** t0 of first phase -> t1 of teardown, in ns */
@@ -102,6 +113,7 @@ export interface BrowserProviderAdapter {
     phases: PhaseSpanMap;
     fusedPhases: string[];
     providerMeta: ProviderMeta;
+    navBreakdown?: NavBreakdown;
     error?: string;
   }>;
   /** Release any long-lived client resources. Called once after the run. */

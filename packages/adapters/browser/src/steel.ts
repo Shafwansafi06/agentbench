@@ -5,7 +5,7 @@ import {
   type BrowserProviderAdapter,
   type ProviderMeta,
 } from "@agentbench/core";
-import { errorMessage } from "./pwtypes.js";
+import { errorMessage, extractNavBreakdown } from "./pwtypes.js";
 import { sdkVersion } from "./solari.js";
 import { cdpUrlOf, idOf } from "./sdk-shapes.js";
 
@@ -43,7 +43,9 @@ export class SteelProvider implements BrowserProviderAdapter {
   async runCycle(url: string): ReturnType<BrowserProviderAdapter["runCycle"]> {
     const timer = new PhaseTimer();
     let error: string | undefined;
+    let navBreakdown: Record<string, number> | undefined;
     let browser: PWBrowser | null = null;
+    let page: PWPage | null = null;
     let sessionId: string | undefined;
 
     try {
@@ -59,7 +61,7 @@ export class SteelProvider implements BrowserProviderAdapter {
       timer.begin("cdp_connect");
       const pwBrowser = await chromium.connectOverCDP(connectUrl, { timeout: 30_000 });
       const context = pwBrowser.contexts()[0] ?? (await pwBrowser.newContext());
-      const page: PWPage = await context.newPage();
+      page = await context.newPage();
       browser = pwBrowser;
       timer.end("cdp_connect");
 
@@ -69,6 +71,7 @@ export class SteelProvider implements BrowserProviderAdapter {
     } catch (e) {
       error = errorMessage(e);
     } finally {
+      if (page) navBreakdown = await extractNavBreakdown(page);
       if (browser) {
         timer.begin("teardown");
         try {
@@ -97,6 +100,7 @@ export class SteelProvider implements BrowserProviderAdapter {
       phases: timer.snapshot(),
       fusedPhases: [],
       providerMeta: this.meta(),
+      ...(navBreakdown !== undefined ? { navBreakdown } : {}),
       ...(error !== undefined ? { error } : {}),
     };
   }

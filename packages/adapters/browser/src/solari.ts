@@ -5,7 +5,7 @@ import {
   type BrowserProviderAdapter,
   type ProviderMeta,
 } from "@agentbench/core";
-import { errorMessage, type PWBrowserLike } from "./pwtypes.js";
+import { errorMessage, extractNavBreakdown, type PWBrowserLike, type PWPageLike } from "./pwtypes.js";
 
 /**
  * Solari cloud browser adapter.
@@ -48,7 +48,9 @@ export class SolariBrowserProvider implements BrowserProviderAdapter {
     const timer = new PhaseTimer();
     const fusedPhases: string[] = [];
     let error: string | undefined;
+    let navBreakdown: Record<string, number> | undefined;
     let browser: PWBrowserLike | null = null;
+    let page: PWPageLike | null = null;
 
     try {
       const solari = this.getClient();
@@ -60,7 +62,7 @@ export class SolariBrowserProvider implements BrowserProviderAdapter {
 
       timer.begin("cdp_connect"); // page acquisition only — see class doc
       browser = launched as unknown as PWBrowserLike;
-      const page = await browser.newPage();
+      page = await browser.newPage();
       timer.end("cdp_connect");
 
       timer.begin("first_navigation");
@@ -69,6 +71,7 @@ export class SolariBrowserProvider implements BrowserProviderAdapter {
     } catch (e) {
       error = errorMessage(e);
     } finally {
+      if (page) navBreakdown = await extractNavBreakdown(page);
       if (browser) {
         timer.begin("teardown");
         try {
@@ -84,6 +87,7 @@ export class SolariBrowserProvider implements BrowserProviderAdapter {
       phases: timer.snapshot(),
       fusedPhases,
       providerMeta: this.meta(),
+      ...(navBreakdown !== undefined ? { navBreakdown } : {}),
       ...(error !== undefined ? { error } : {}),
     };
   }

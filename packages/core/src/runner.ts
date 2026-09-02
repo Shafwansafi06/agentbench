@@ -52,6 +52,7 @@ export async function runBenchmark(cfg: BenchmarkRunConfig): Promise<RunSummary>
       let phases: CycleRecord["phases"] = {};
       let fusedPhases: string[] = [];
       let providerMeta: CycleRecord["provider_meta"] = {};
+      let navBreakdown: CycleRecord["nav_breakdown_ms"] | undefined;
       let error: string | undefined;
 
       try {
@@ -59,6 +60,7 @@ export async function runBenchmark(cfg: BenchmarkRunConfig): Promise<RunSummary>
         phases = result.phases;
         fusedPhases = result.fusedPhases;
         providerMeta = result.providerMeta;
+        navBreakdown = result.navBreakdown;
         error = result.error;
       } catch (e) {
         error = e instanceof Error ? e.message : String(e);
@@ -84,6 +86,7 @@ export async function runBenchmark(cfg: BenchmarkRunConfig): Promise<RunSummary>
         provider_meta: providerMeta,
         phases,
         fused_phases: fusedPhases,
+        ...(navBreakdown !== undefined ? { nav_breakdown_ms: navBreakdown } : {}),
         ...(error !== undefined ? { error } : {}),
         success,
         ...(success && t0 !== undefined
