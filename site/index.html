@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agentbench — live benchmark for AI agent infrastructure</title>
+<style>
+  :root { --bg:#0b0e14; --fg:#e6e6e6; --dim:#8b93a5; --line:#232a38; --acc:#5eead4; --warn:#fbbf24; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; padding:32px 20px 60px; max-width:1080px; margin-inline:auto; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:15px; color:var(--dim); margin:36px 0 10px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; }
+  .sub { color:var(--dim); margin-bottom:28px; }
+  .sub a { color:var(--acc); }
+  table { border-collapse:collapse; width:100%; margin-bottom:8px; }
+  th, td { text-align:left; padding:7px 12px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  th { color:var(--dim); font-weight:500; font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tr:hover td { background:#11151f; }
+  .bar { height:8px; background:var(--acc); border-radius:2px; display:inline-block; vertical-align:middle; }
+  .note { color:var(--dim); font-size:13px; }
+  .flag { color:var(--warn); }
+  #generated { color:var(--dim); font-size:13px; margin-bottom:20px; }
+  .method { color:var(--dim); font-size:13px; border:1px solid var(--line); padding:14px 16px; border-radius:6px; margin-top:28px; }
+  code { color:var(--acc); }
+</style>
+</head>
+<body>
+<h1>agentbench</h1>
+<p class="sub">Independent, continuously-running benchmark for cloud browser &amp; sandbox providers serving AI agents.
+<a href="https://github.com/REPLACE_ME/agentbench">source + raw data</a> · <a href="/summary.json">API</a></p>
+<div id="generated">loading…</div>
+
+<h2>Full round trip — create → connect → navigate → teardown (ms, lower is better)</h2>
+<div id="browser"></div>
+
+<h2>Stealth pass rate — self-contained fingerprint checks (higher is better)</h2>
+<div id="stealth"></div>
+
+<h2>Sandbox — create → exec → teardown (ms, lower is better)</h2>
+<div id="sandbox"></div>
+
+<div class="method">
+  <strong>Method.</strong> Interleaved round-robin across providers within every cycle (never sequential — that's the bias
+  vendor benchmarks carry). p50/p95/p99 over measured cycles only; warmups recorded and disclosed, never cherry-picked.
+  Failures count into success rate and are published. Navigation targets a fixed self-hosted control page; DNS/TLS/TTFB
+  are measured <em>inside each provider's browser</em> via PerformanceNavigationTiming to separate network from overhead.
+  Raw nanosecond timestamps for every cycle are committed to the repo — clone and re-analyze.
+  <a href="https://github.com/REPLACE_ME/agentbench/blob/main/METHODOLOGY.md">Full methodology →</a>
+</div>
+
+<script>
+function fmt(x, d=0) { return Number.isFinite(x) ? x.toFixed(d) : "—"; }
+function table(headers, rows) {
+  const t = document.createElement("table");
+  const hr = document.createElement("tr");
+  for (const h of headers) { const th = document.createElement("th"); th.textContent = h; if (headers.slice(1).includes(h)) th.className="num"; hr.appendChild(th); }
+  t.appendChild(hr);
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    r.forEach((cell, i) => { const td = document.createElement("td"); td.innerHTML = cell; if (i>0) td.className="num"; tr.appendChild(td); });
+    t.appendChild(tr);
+  }
+  return t;
+}
+
+fetch("summary.json").then(r => r.json()).then(data => {
+  document.getElementById("generated").textContent =
+    "generated " + data.generated_at + " · every number recomputable from raw JSONL in the repo";
+
+  const agg = data.aggregates;
+
+  const br = agg.filter(a => a.primitive === "browser" && Number.isFinite(a.full_round_trip_ms.p50));
+  const maxP50 = Math.max(...br.map(a => a.full_round_trip_ms.p50), 1);
+  br.sort((a,b) => a.full_round_trip_ms.p50 - b.full_round_trip_ms.p50);
+  document.getElementById("browser").appendChild(table(
+    ["provider","success","p50","p95 [CI]","p99","session_create","first_nav","dns","ttfb","dcl"],
+    br.map(a => [
+      a.provider,
+      (a.success_rate*100).toFixed(0)+"%",
+      `<span class="bar" style="width:${(a.full_round_trip_ms.p50/maxP50*180).toFixed(0)}px;opacity:.55"></span> ${fmt(a.full_round_trip_ms.p50)}`,
+      `${fmt(a.full_round_trip_ms.p95)} [${fmt(a.full_round_trip_ms.ci95_p95[0])}, ${fmt(a.full_round_trip_ms.ci95_p95[1])}]`,
+      fmt(a.full_round_trip_ms.p99),
+      fmt(a.phases_ms.session_create?.p50),
+      fmt(a.phases_ms.first_navigation?.p50),
+      fmt(a.nav_breakdown_ms.dns, 1),
+      fmt(a.nav_breakdown_ms.ttfb, 1),
+      fmt(a.nav_breakdown_ms.dom_content_loaded, 1),
+    ])
+  ));
+
+  const st = agg.filter(a => a.primitive === "stealth" && a.stealth);
+  if (st.length) {
+    st.sort((a,b) => b.stealth.pass_rate - a.stealth.pass_rate);
+    const checkKeys = Object.keys(st[0].stealth.checks);
+    document.getElementById("stealth").appendChild(table(
+      ["provider","pass_rate",...checkKeys.map(k => k.replace(/_/g," "))],
+      st.map(a => [
+        a.provider,
+        (a.stealth.pass_rate*100).toFixed(0)+"%",
+        ...checkKeys.map(k => {
+          const v = a.stealth.checks[k];
+          if (!Number.isFinite(v)) return "—";
+          const pct = (v*100).toFixed(0)+"%";
+          return v >= 0.99 ? pct : `<span class="flag">${pct}</span>`;
+        }),
+      ])
+    ));
+  } else { document.getElementById("stealth").innerHTML = "<p class='note'>no stealth data yet</p>"; }
+
+  const sb = agg.filter(a => a.primitive === "sandbox" && Number.isFinite(a.full_round_trip_ms.p50));
+  if (sb.length) {
+    sb.sort((a,b) => a.full_round_trip_ms.p50 - b.full_round_trip_ms.p50);
+    document.getElementById("sandbox").appendChild(table(
+      ["provider","success","p50","p95 [CI]","create","first_exec","exec_overhead","fs_write_1mb"],
+      sb.map(a => [
+        a.provider,
+        (a.success_rate*100).toFixed(0)+"%",
+        fmt(a.full_round_trip_ms.p50),
+        `${fmt(a.full_round_trip_ms.p95)} [${fmt(a.full_round_trip_ms.ci95_p95[0])}, ${fmt(a.full_round_trip_ms.ci95_p95[1])}]`,
+        fmt(a.phases_ms.create?.p50),
+        fmt(a.phases_ms.first_exec?.p50),
+        fmt(a.phases_ms.exec_overhead?.p50),
+        fmt(a.phases_ms.filesystem_write_1mb?.p50),
+      ])
+    ));
+  } else { document.getElementById("sandbox").innerHTML = "<p class='note'>no sandbox data yet</p>"; }
+}).catch(e => { document.getElementById("generated").textContent = "failed to load summary.json: " + e; });
+</script>
+</body>
+</html>

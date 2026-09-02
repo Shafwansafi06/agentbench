@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-02T15:53:42.483Z",
+  "aggregates": [
+    {
+      "provider": "solari",
+      "primitive": "browser",
+      "runs": 48,
+      "cycles": 48,
+      "success_rate": 1,
+      "full_round_trip_ms": {
+        "p50": 4162.304184500001,
+        "p95": 6259.701788599999,
+        "p99": 7118.859767550002,
+        "ci95_p95": [
+          5684.628803,
+          7287.3125197499985
+        ]
+      },
+      "phases_ms": {
+        "session_create": {
+          "p50": 2671.7018895,
+          "p95": 3581.7049389000003
+        },
+        "cdp_connect": {
+          "p50": 683.1591055,
+          "p95": 1435.1901144999997
+        },
+        "first_navigation": {
+          "p50": 334.2475275,
+          "p95": 769.2991399999999
+        },
+        "teardown": {
+          "p50": 309.099199,
+          "p95": 1434.4432484499998
+        }
+      },
+      "nav_breakdown_ms": {
+        "dns": 0.5,
+        "tcp": 9.05,
+        "tls": 7.05,
+        "ttfb": 1.85,
+        "content": 11.25,
+        "dom_content_loaded": 34.75
+      }
+    },
+    {
+      "provider": "hyperbrowser",
+      "primitive": "browser",
+      "runs": 19,
+      "cycles": 19,
+      "success_rate": 1,
+      "full_round_trip_ms": {
+        "p50": 4730.664145,
+        "p95": 6389.2884726,
+        "p99": 6453.88943292,
+        "ci95_p95": [
+          5389.956647000001,
+          6470.039673
+        ]
+      },
+      "phases_ms": {
+        "session_create": {
+          "p50": 575.857809,
+          "p95": 709.8420723999998
+        },
+        "cdp_connect": {
+          "p50": 2755.861932,
+          "p95": 3947.582265699998
+        },
+        "first_navigation": {
+          "p50": 635.71228,
+          "p95": 799.3078963999995
+        },
+        "teardown": {
+          "p50": 310.013103,
+          "p95": 398.9158397999993
+        }
+      },
+      "nav_breakdown_ms": {
+        "dns": 0,
+        "tcp": 31.9,
+        "tls": 21.55,
+        "ttfb": 2.95,
+        "content": 19.5,
+        "dom_content_loaded": 273.15
+      }
+    },
+    {
+      "provider": "kernel",
+      "primitive": "browser",
+      "runs": 24,
+      "cycles": 24,
+      "success_rate": 0.875,
+      "full_round_trip_ms": {
+        "p50": 4315.236508,
+        "p95": 5104.158908,
+        "p99": 5877.633105600001,
+        "ci95_p95": [
+          4814.380344,
+          6071.001655
+        ]
+      },
+      "phases_ms": {
+        "session_create": {
+          "p50": 792.0816405,
+          "p95": 1167.9318844
+        },
+        "cdp_connect": {
+          "p50": 2600.579056,
+          "p95": 3542.698654
+        },
+        "first_navigation": {
+          "p50": 302.783487,
+          "p95": 495.321367
+        },
+        "teardown": {
+          "p50": 225.693257,
+          "p95": 308.643323
+        }
+      },
+      "nav_breakdown_ms": {
+        "dns": 0,
+        "tcp": 11.65,
+        "tls": 7.8500000000000005,
+        "ttfb": 50.95,
+        "content": 1.65,
+        "dom_content_loaded": 98.25
+      }
+    },
+    {
+      "provider": "steel",
+      "primitive": "browser",
+      "runs": 19,
+      "cycles": 19,
+      "success_rate": 1,
+      "full_round_trip_ms": {
+        "p50": 5838.791085,
+        "p95": 7997.2939745999975,
+        "p99": 9030.87456372,
+        "ci95_p95": [
+          7369.0494935,
+          9289.269711
+        ]
+      },
+      "phases_ms": {
+        "session_create": {
+          "p50": 696.605643,
+          "p95": 2922.380563599999
+        },
+        "cdp_connect": {
+          "p50": 3071.421939,
+          "p95": 5292.914592699999
+        },
+        "first_navigation": {
+          "p50": 471.935889,
+          "p95": 681.7386370999997
+        },
+        "teardown": {
+          "p50": 526.842336,
+          "p95": 2419.4758331999997
+        }
+      },
+      "nav_breakdown_ms": {
+        "dns": 112.9,
+        "tcp": 10.25,
+        "tls": 8.55,
+        "ttfb": 2.25,
+        "content": 15.95,
+        "dom_content_loaded": 172.35
+      }
+    },
+    {
+      "provider": "solari",
+      "primitive": "sandbox",
+      "runs": 10,
+      "cycles": 10,
+      "success_rate": 1,
+      "full_round_trip_ms": {
+        "p50": 11037.977189500001,
+        "p95": 13214.96574615,
+        "p99": 13673.10918843,
+        "ci95_p95": [
+          11366.895592,
+          13787.645049
+        ]
+      },
+      "phases_ms": {
+        "create": {
+          "p50": 1248.870995,
+          "p95": 1337.0485252500002
+        },
+        "first_exec": {
+          "p50": 1679.545284,
+          "p95": 1853.4661414
+        },
+        "exec_overhead": {
+          "p50": 384.32228699999996,
+          "p95": 1101.2244600999989
+        },
+        "filesystem_write_1mb": {
+          "p50": 6438.5823045,
+          "p95": 7723.909800949999
+        },
+        "teardown": {
+          "p50": 1231.9175155,
+          "p95": 2127.8855833499983
+        }
+      },
+      "nav_breakdown_ms": {}
+    },
+    {
+      "provider": "kernel",
+      "primitive": "stealth",
+      "runs": 2,
+      "cycles": 2,
+      "success_rate": 1,
+      "full_round_trip_ms": {
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "ci95_p95": [
+          null,
+          null
+        ]
+      },
+      "phases_ms": {},
+      "nav_breakdown_ms": {},
+      "stealth": {
+        "pass_rate": 0.8571428571428571,
+        "checks": {
+          "webdriver_leak": 1,
+          "languages_present": 1,
+          "plugins_present": 1,
+          "chrome_object": 1,
+          "permissions_consistent": 0,
+          "webgl_gpu": 1,
+          "ua_platform_consistent": 1
+        }
+      }
+    },
+    {
+      "provider": "solari",
+      "primitive": "stealth",
+      "runs": 2,
+      "cycles": 2,
+      "success_rate": 1,
+      "full_round_trip_ms": {
+        "p50": null,
+        "p95": null,
+        "p99": null,
+        "ci95_p95": [
+          null,
+          null
+        ]
+      },
+      "phases_ms": {},
+      "nav_breakdown_ms": {},
+      "stealth": {
+        "pass_rate": 0.42857142857142855,
+        "checks": {
+          "webdriver_leak": 1,
+          "languages_present": 1,
+          "plugins_present": 0,
+          "chrome_object": 0,
+          "permissions_consistent": 0,
+          "webgl_gpu": 0,
+          "ua_platform_consistent": 1
+        }
+      }
+    }
+  ]
+}

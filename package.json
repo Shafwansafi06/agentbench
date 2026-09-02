@@ -15,7 +15,8 @@
   "scripts": {
     "bench": "tsx packages/cli/src/index.ts",
     "providers": "tsx packages/cli/src/index.ts providers",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "summarize": "tsx scripts/summarize.ts"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

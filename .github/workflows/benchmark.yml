@@ -1,0 +1,102 @@
+name: benchmark
+
+# Runs the full suite on a schedule and commits the raw JSONL to the repo.
+# That commit log IS the dataset: anyone can git clone and re-analyze.
+#
+# Region note: GitHub standard runners do not expose region selection. The
+# runner label is disclosed in every record's `region` field. Regional
+# runners (us-east/eu-west/ap-south) require paid larger runners and are on
+# the roadmap — see README.
+
+on:
+  schedule:
+    # 6-hour cadence, offset from the hour to avoid top-of-hour congestion
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      n:
+        description: "measured cycles per provider"
+        default: "50"
+      quick:
+        description: "quick smoke (n=2, warmup=1, stealth n=2)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: benchmark
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Latency (browser, interleaved)
+        env:
+          SOLARI_API_KEY: ${{ secrets.SOLARI_API_KEY }}
+          STEEL_API_KEY: ${{ secrets.STEEL_API_KEY }}
+          KERNEL_API_KEY: ${{ secrets.KERNEL_API_KEY }}
+          HYPERBROWSER_API_KEY: ${{ secrets.HYPERBROWSER_API_KEY }}
+          BROWSERBASE_API_KEY: ${{ secrets.BROWSERBASE_API_KEY }}
+          BROWSERBASE_PROJECT_ID: ${{ secrets.BROWSERBASE_PROJECT_ID }}
+          ANCHORBROWSER_API_KEY: ${{ secrets.ANCHORBROWSER_API_KEY }}
+          CONTROL_PAGE_URL: ${{ secrets.CONTROL_PAGE_URL }}
+        run: |
+          if [ "${{ inputs.quick }}" = "true" ]; then
+            npm run bench -- --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 2 --warmup 1
+          else
+            npm run bench -- --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n ${{ inputs.n || 50 }} --warmup 3
+          fi
+
+      - name: Stealth gauntlet
+        env:
+          SOLARI_API_KEY: ${{ secrets.SOLARI_API_KEY }}
+          STEEL_API_KEY: ${{ secrets.STEEL_API_KEY }}
+          KERNEL_API_KEY: ${{ secrets.KERNEL_API_KEY }}
+          HYPERBROWSER_API_KEY: ${{ secrets.HYPERBROWSER_API_KEY }}
+          BROWSERBASE_API_KEY: ${{ secrets.BROWSERBASE_API_KEY }}
+          BROWSERBASE_PROJECT_ID: ${{ secrets.BROWSERBASE_PROJECT_ID }}
+          ANCHORBROWSER_API_KEY: ${{ secrets.ANCHORBROWSER_API_KEY }}
+        run: |
+          if [ "${{ inputs.quick }}" = "true" ]; then
+            npm run bench -- stealth --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 2 --warmup 0
+          else
+            npm run bench -- stealth --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 10 --warmup 1
+          fi
+
+      - name: Sandbox
+        env:
+          SOLARI_API_KEY: ${{ secrets.SOLARI_API_KEY }}
+          E2B_API_KEY: ${{ secrets.E2B_API_KEY }}
+          DAYTONA_API_KEY: ${{ secrets.DAYTONA_API_KEY }}
+        run: |
+          if [ "${{ inputs.quick }}" = "true" ]; then
+            npm run bench -- --primitive sandbox --providers solari,e2b,daytona --n 2 --warmup 1
+          else
+            npm run bench -- --primitive sandbox --providers solari,e2b,daytona --n ${{ inputs.n || 30 }} --warmup 3
+          fi
+
+      - name: Commit raw data
+        run: |
+          git config user.name "agentbench-bot"
+          git config user.email "agentbench@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "no new data"
+          else
+            git commit -m "data: scheduled run $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
+            git push
+          fi

@@ -1,0 +1,17 @@
+{
+  "_comment": "Published list prices for cost-per-1k-sessions. Every entry needs a last_verified date; entries older than 90 days are flagged stale and excluded from headline numbers. null = not yet verified, do not guess.",
+  "browser": {
+    "solari": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://getsolari.com/pricing" },
+    "browserbase": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://www.browserbase.com/pricing" },
+    "steel": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://steel.dev/pricing" },
+    "kernel": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://kernel.sh/pricing" },
+    "hyperbrowser": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://hyperbrowser.ai/pricing" },
+    "anchor": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://anchorbrowser.io/pricing" }
+  },
+  "sandbox": {
+    "solari": { "per_second_usd": null, "last_verified": null, "source": "https://getsolari.com/pricing" },
+    "e2b": { "per_second_usd": null, "last_verified": null, "source": "https://e2b.dev/pricing" },
+    "daytona": { "per_second_usd": null, "last_verified": null, "source": "https://www.daytona.io/pricing" },
+    "modal": { "per_second_usd": null, "last_verified": null, "source": "https://modal.com/pricing", "note": "no official Node SDK; not measured" }
+  }
+}
