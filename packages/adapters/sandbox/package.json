@@ -1,0 +1,16 @@
+{
+  "name": "@agentbench/sandbox-adapters",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Sandbox provider adapters for agentbench: solari, e2b, daytona.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@agentbench/core": "*",
+    "@daytonaio/sdk": "^0.207.1",
+    "@solarisdk/sdk": "^0.1.2",
+    "e2b": "^2.46.1"
+  }
+}

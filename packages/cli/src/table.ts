@@ -63,7 +63,7 @@ export function compositeTable(records: CycleRecord[]): string {
   );
 }
 
-/** Per-phase p50 table, measured cycles only. */
+/** Per-phase p50 table, measured cycles only. Phases derived from the data. */
 export function phaseTable(records: CycleRecord[]): string {
   const byProviderPhase = new Map<string, Map<string, number[]>>();
   for (const r of records) {
@@ -80,11 +80,19 @@ export function phaseTable(records: CycleRecord[]): string {
     }
   }
 
-  const headers = ["provider", "session_create", "cdp_connect", "first_nav", "teardown"];
+  // Phase order: canonical when known, then anything else seen in data.
+  const phaseOrder: string[] = [...BROWSER_PHASES];
+  for (const phases of byProviderPhase.values()) {
+    for (const phase of phases.keys()) {
+      if (!phaseOrder.includes(phase)) phaseOrder.push(phase);
+    }
+  }
+
+  const headers = ["provider", ...phaseOrder.map((p) => p.replace(/_/g, " ").slice(0, 10))];
   const rows: string[][] = [];
   for (const [provider, phases] of byProviderPhase) {
     const row: string[] = [provider];
-    for (const phase of BROWSER_PHASES) {
+    for (const phase of phaseOrder) {
       const samples = phases.get(phase);
       if (!samples || samples.length === 0) {
         row.push("—");

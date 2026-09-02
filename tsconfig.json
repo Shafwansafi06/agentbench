@@ -13,7 +13,8 @@
     "baseUrl": ".",
     "paths": {
       "@agentbench/core": ["packages/core/src/index.ts"],
-      "@agentbench/browser-adapters": ["packages/adapters/browser/src/index.ts"]
+      "@agentbench/browser-adapters": ["packages/adapters/browser/src/index.ts"],
+      "@agentbench/sandbox-adapters": ["packages/adapters/sandbox/src/index.ts"]
     }
   },
   "include": ["packages/**/src/**/*.ts"]
