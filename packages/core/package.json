@@ -1,0 +1,11 @@
+{
+  "name": "@agentbench/core",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Timing, stats, storage, and runner core for agentbench.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {}
+}

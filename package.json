@@ -1,0 +1,25 @@
+{
+  "name": "agentbench",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Independent, continuously-running benchmark for cloud browser and sandbox providers serving AI agents.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/*",
+    "packages/adapters/*"
+  ],
+  "scripts": {
+    "bench": "tsx packages/cli/src/index.ts",
+    "providers": "tsx packages/cli/src/index.ts providers",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

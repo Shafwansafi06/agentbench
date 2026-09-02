@@ -1,0 +1,16 @@
+{
+  "name": "@agentbench/browser-adapters",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser provider adapters for agentbench: solari, browserbase.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@agentbench/core": "*",
+    "@browserbasehq/sdk": "^2.0.0",
+    "@solarisdk/browser": "^0.1.1",
+    "playwright-core": "^1.49.0"
+  }
+}

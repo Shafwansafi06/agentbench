@@ -1,0 +1,14 @@
+{
+  "name": "@agentbench/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "CLI for agentbench: npx agentbench run",
+  "license": "MIT",
+  "bin": {
+    "agentbench": "./dist/index.js"
+  },
+  "dependencies": {
+    "@agentbench/browser-adapters": "*",
+    "@agentbench/core": "*"
+  }
+}

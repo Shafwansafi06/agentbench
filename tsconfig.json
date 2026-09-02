@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@agentbench/core": ["packages/core/src/index.ts"],
+      "@agentbench/browser-adapters": ["packages/adapters/browser/src/index.ts"]
+    }
+  },
+  "include": ["packages/**/src/**/*.ts"]
+}
