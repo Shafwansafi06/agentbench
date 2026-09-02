@@ -118,7 +118,7 @@ async function run(): Promise<void> {
   const { providers, unknown, unavailable } = resolveProviders(flags.providers);
   if (unknown.length > 0) {
     console.error(`unknown providers: ${unknown.join(", ")}`);
-    console.error(`known: solari, browserbase`);
+    console.error(`known: solari, browserbase, steel, kernel, hyperbrowser, anchor`);
     process.exit(1);
   }
   for (const u of unavailable) {

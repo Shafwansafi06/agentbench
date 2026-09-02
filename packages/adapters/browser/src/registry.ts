@@ -1,6 +1,10 @@
 import type { BrowserProviderAdapter } from "@agentbench/core";
 import { SolariBrowserProvider } from "./solari.js";
 import { BrowserbaseProvider } from "./browserbase.js";
+import { SteelProvider } from "./steel.js";
+import { KernelProvider } from "./kernel.js";
+import { HyperbrowserProvider } from "./hyperbrowser.js";
+import { AnchorProvider } from "./anchor.js";
 
 /**
  * Registry of built-in browser providers. Adding a provider = implementing
@@ -10,6 +14,10 @@ import { BrowserbaseProvider } from "./browserbase.js";
 export const BROWSER_PROVIDERS: BrowserProviderAdapter[] = [
   new SolariBrowserProvider(),
   new BrowserbaseProvider(),
+  new SteelProvider(),
+  new KernelProvider(),
+  new HyperbrowserProvider(),
+  new AnchorProvider(),
 ];
 
 export function resolveProviders(names: string[]): {
@@ -35,4 +43,4 @@ export function resolveProviders(names: string[]): {
   return { providers, unknown, unavailable };
 }
 
-export { SolariBrowserProvider, BrowserbaseProvider };
+export { SolariBrowserProvider, BrowserbaseProvider, SteelProvider, KernelProvider, HyperbrowserProvider, AnchorProvider };

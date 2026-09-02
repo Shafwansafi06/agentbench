@@ -21,5 +21,11 @@
     "@types/node": "^20.14.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@hyperbrowser/sdk": "^0.92.3",
+    "@onkernel/sdk": "^0.97.0",
+    "anchorbrowser": "^1.0.0",
+    "steel-sdk": "^0.18.0"
   }
 }
