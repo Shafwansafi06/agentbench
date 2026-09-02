@@ -29,6 +29,7 @@ export function cdpUrlOf(
     "websocket_url",
     "cdpUrl",
     "cdp_url",
+    "cdp_ws_url",
     "connectUrl",
     "connect_url"
   );
