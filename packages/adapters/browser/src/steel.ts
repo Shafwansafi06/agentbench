@@ -6,6 +6,7 @@ import {
   type ProviderMeta,
 } from "@agentbench/core";
 import { errorMessage, extractNavBreakdown } from "./pwtypes.js";
+import { runStealthWithSteps, type StealthCycleResult } from "./stealth-helpers.js";
 import { sdkVersion } from "./solari.js";
 import { cdpUrlOf, idOf } from "./sdk-shapes.js";
 
@@ -103,6 +104,32 @@ export class SteelProvider implements BrowserProviderAdapter {
       ...(navBreakdown !== undefined ? { navBreakdown } : {}),
       ...(error !== undefined ? { error } : {}),
     };
+  }
+
+
+  async runStealthCycle(): Promise<StealthCycleResult> {
+    return runStealthWithSteps({
+      create: async () => {
+        const steel = this.getClient();
+        const session = (await steel.sessions.create()) as unknown;
+        const connectUrl = cdpUrlOf(session, "steel");
+        const pwBrowser = await chromium.connectOverCDP(connectUrl, { timeout: 30_000 });
+        const context = pwBrowser.contexts()[0] ?? (await pwBrowser.newContext());
+        const page = await context.newPage();
+        const sessionId = idOf(session);
+        return {
+          page,
+          cleanup: async () => {
+            await pwBrowser.close();
+            if (sessionId) {
+              try {
+                await (steel.sessions as unknown as { release: (id: string) => Promise<unknown> }).release(sessionId);
+              } catch { /* best-effort */ }
+            }
+          },
+        };
+      },
+    });
   }
 
   async dispose(): Promise<void> {

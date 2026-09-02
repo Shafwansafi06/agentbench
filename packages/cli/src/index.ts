@@ -25,6 +25,7 @@ interface Flags {
   out: string;
   listProviders: boolean;
   sustained: number | null;
+  stealth: boolean;
 }
 
 function usage(): never {
@@ -60,6 +61,7 @@ function parseFlags(argv: string[]): Flags {
     out: "data/runs",
     listProviders: false,
     sustained: null,
+    stealth: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i] as string;
@@ -101,6 +103,10 @@ function parseFlags(argv: string[]): Flags {
       case "--list-providers":
         flags.listProviders = true;
         break;
+      case "stealth":
+      case "--stealth":
+        flags.stealth = true;
+        break;
       case "--help":
       case "-h":
         usage();
@@ -134,6 +140,77 @@ async function run(): Promise<void> {
         `${p.primitive.padEnd(8)} ${p.name.padEnd(12)} ${status.available ? "ready" : `NOT configured — missing: ${status.missing.join(", ")}`}`
       );
     }
+    return;
+  }
+
+  if (flags.stealth) {
+    const { resolveProviders } = await import("@agentbench/browser-adapters");
+    const { providers, unknown, unavailable } = resolveProviders(flags.providers);
+    if (unknown.length > 0) {
+      console.error(`unknown providers: ${unknown.join(", ")}`);
+      process.exit(1);
+    }
+    for (const u of unavailable) {
+      console.warn(`⚠ ${u.name}: not measured — no access (missing ${u.missing.join(", ")}).`);
+    }
+    const capable = providers.filter((p) => "runStealthCycle" in p);
+    if (capable.length === 0) {
+      console.error("no stealth-capable providers configured");
+      process.exit(1);
+    }
+    const { runStealthGauntlet, STEALTH_CHECKS } = await import(
+      "@agentbench/browser-adapters"
+    );
+    const { makeRunId } = await import("@agentbench/core");
+    const runId = makeRunId();
+    console.log(
+      `stealth gauntlet ${runId} | providers: ${capable.map((p) => p.name).join(", ")} | n=${flags.n} warmup=${flags.warmup} | region=${flags.region}`
+    );
+    let done = 0;
+    const total = (flags.warmup + flags.n) * capable.length;
+    const summary = await runStealthGauntlet({
+      providers: capable as never,
+      n: flags.n,
+      warmup: flags.warmup,
+      region: flags.region,
+      outDir: flags.out,
+      runId,
+      onCycle: (row) => {
+        done++;
+        const label = row.warmup ? "warmup" : row.success ? `${row.checks_passed}/${row.checks_total}` : "FAIL";
+        console.log(`  [${done}/${total}] ${row.provider} ${label}`);
+      },
+    });
+
+    // Aggregate: per-provider pass rate per check (measured cycles only)
+    const agg = new Map<string, { total: number; byCheck: Map<string, number> }>();
+    for (const r of summary.records) {
+      if (r.warmup || !r.success) continue;
+      const a = agg.get(r.provider) ?? { total: 0, byCheck: new Map() };
+      a.total++;
+      for (const [k, v] of Object.entries(r.checks)) {
+        if (v) a.byCheck.set(k, (a.byCheck.get(k) ?? 0) + 1);
+      }
+      agg.set(r.provider, a);
+    }
+
+    const CHECKS = STEALTH_CHECKS;
+    const headers = ["provider", "pass_rate", ...CHECKS.map((c) => c.replace(/_/g, " ").slice(0, 10))];
+    const rows: string[][] = [];
+    for (const [name, a] of agg) {
+      rows.push([
+        name,
+        `${((STEALTH_CHECKS.reduce((s, k) => s + (a.byCheck.get(k) ?? 0) / a.total, 0) / STEALTH_CHECKS.length) * 100).toFixed(0)}%`,
+        ...CHECKS.map((k) =>
+          a.byCheck.has(k) ? `${((a.byCheck.get(k) as number) / a.total * 100).toFixed(0)}%` : "—"
+        ),
+      ]);
+    }
+    const { table } = await import("./table.js");
+    console.log(`\nstealth pass rates (measured cycles only):\n`);
+    console.log(table(headers, rows));
+    console.log(`\nraw data: ${summary.outPath}`);
+    await Promise.all(capable.map((p) => p.dispose()));
     return;
   }
 

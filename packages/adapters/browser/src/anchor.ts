@@ -6,6 +6,7 @@ import {
   type ProviderMeta,
 } from "@agentbench/core";
 import { errorMessage, extractNavBreakdown } from "./pwtypes.js";
+import { runStealthWithSteps, type StealthCycleResult } from "./stealth-helpers.js";
 import { sdkVersion } from "./solari.js";
 import { cdpUrlOf, idOf } from "./sdk-shapes.js";
 
@@ -119,6 +120,35 @@ export class AnchorProvider implements BrowserProviderAdapter {
       ...(navBreakdown !== undefined ? { navBreakdown } : {}),
       ...(error !== undefined ? { error } : {}),
     };
+  }
+
+
+  async runStealthCycle(): Promise<StealthCycleResult> {
+    this.ensureClient();
+    return runStealthWithSteps({
+      create: async () => {
+        const response = (await Sessions.createSession({
+          body: { session: { recording: { active: false } } },
+        } as Parameters<typeof Sessions.createSession>[0])) as { data?: unknown } & unknown;
+        const session = response?.data ?? response;
+        const connectUrl = cdpUrlOf(session, "anchor");
+        const pwBrowser = await chromium.connectOverCDP(connectUrl, { timeout: 30_000 });
+        const context = pwBrowser.contexts()[0] ?? (await pwBrowser.newContext());
+        const page = await context.newPage();
+        const sessionId = idOf(session);
+        return {
+          page,
+          cleanup: async () => {
+            await pwBrowser.close();
+            if (sessionId) {
+              try {
+                await (Sessions as unknown as { deleteSession: (o: { path: { sessionId: string } }) => Promise<unknown> }).deleteSession({ path: { sessionId } });
+              } catch { /* best-effort */ }
+            }
+          },
+        };
+      },
+    });
   }
 
   async dispose(): Promise<void> {

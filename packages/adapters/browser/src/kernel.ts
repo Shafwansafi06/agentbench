@@ -6,6 +6,7 @@ import {
   type ProviderMeta,
 } from "@agentbench/core";
 import { errorMessage, extractNavBreakdown } from "./pwtypes.js";
+import { runStealthWithSteps, type StealthCycleResult } from "./stealth-helpers.js";
 import { sdkVersion } from "./solari.js";
 import { cdpUrlOf, idOf } from "./sdk-shapes.js";
 
@@ -105,6 +106,32 @@ export class KernelProvider implements BrowserProviderAdapter {
       ...(navBreakdown !== undefined ? { navBreakdown } : {}),
       ...(error !== undefined ? { error } : {}),
     };
+  }
+
+
+  async runStealthCycle(): Promise<StealthCycleResult> {
+    return runStealthWithSteps({
+      create: async () => {
+        const kernel = this.getClient();
+        const created = (await kernel.browsers.create()) as unknown;
+        const connectUrl = cdpUrlOf(created, "kernel");
+        const pwBrowser = await chromium.connectOverCDP(connectUrl, { timeout: 30_000 });
+        const context = pwBrowser.contexts()[0] ?? (await pwBrowser.newContext());
+        const page = await context.newPage();
+        const sessionId = idOf(created);
+        return {
+          page,
+          cleanup: async () => {
+            await pwBrowser.close();
+            if (sessionId) {
+              try {
+                await (kernel.browsers as unknown as { delete: (id: string) => Promise<unknown> }).delete(sessionId);
+              } catch { /* best-effort */ }
+            }
+          },
+        };
+      },
+    });
   }
 
   async dispose(): Promise<void> {

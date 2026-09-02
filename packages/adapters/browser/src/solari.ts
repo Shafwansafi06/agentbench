@@ -6,6 +6,7 @@ import {
   type ProviderMeta,
 } from "@agentbench/core";
 import { errorMessage, extractNavBreakdown, type PWBrowserLike, type PWPageLike } from "./pwtypes.js";
+import { runStealthWithSteps, type StealthCycleResult } from "./stealth-helpers.js";
 
 /**
  * Solari cloud browser adapter.
@@ -90,6 +91,20 @@ export class SolariBrowserProvider implements BrowserProviderAdapter {
       ...(navBreakdown !== undefined ? { navBreakdown } : {}),
       ...(error !== undefined ? { error } : {}),
     };
+  }
+
+
+  async runStealthCycle(): Promise<StealthCycleResult> {
+    return runStealthWithSteps({
+      create: async () => {
+        const solari = this.getClient();
+        const launched = (await solari.launch()) as unknown as PWBrowserLike;
+        return {
+          page: await launched.newPage(),
+          cleanup: async () => { await launched.close(); },
+        };
+      },
+    });
   }
 
   async dispose(): Promise<void> {
