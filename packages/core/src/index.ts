@@ -5,3 +5,4 @@ export * from "./stats.js";
 export * from "./jsonl.js";
 export * from "./git.js";
 export * from "./runner.js";
+export * from "./sustained.js";

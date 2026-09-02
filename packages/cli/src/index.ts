@@ -25,6 +25,7 @@ interface Flags {
   region: string;
   out: string;
   listProviders: boolean;
+  sustained: number | null;
 }
 
 function usage(): never {
@@ -33,6 +34,7 @@ function usage(): never {
 Usage:
   agentbench run [--primitive browser|sandbox] [--providers a,b] [--n 50]
                  [--warmup 3] [--url URL] [--region NAME] [--out DIR]
+                 [--sustained 100]
   agentbench providers
 
 Options:
@@ -40,6 +42,8 @@ Options:
   --providers   comma-separated provider names (default: solari,browserbase)
   --n           measured cycles per provider (default 50)
   --warmup      discarded warmup cycles per provider (default 3)
+  --sustained   sustained agent-loop mode: N sequential cycles per provider,
+                reports p95 degradation first-third vs last-third
   --url         navigation target (default: dev placeholder, see METHODOLOGY)
   --region      runner region label (default "local"; CI sets us-east etc.)
   --out         output directory for JSONL (default data/runs)`);
@@ -56,6 +60,7 @@ function parseFlags(argv: string[]): Flags {
     region: "local",
     out: "data/runs",
     listProviders: false,
+    sustained: null,
   };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i] as string;
@@ -90,6 +95,9 @@ function parseFlags(argv: string[]): Flags {
       case "--out":
         flags.out = value();
         break;
+      case "--sustained":
+        flags.sustained = Math.max(3, parseInt(value(), 10));
+        break;
       case "providers":
       case "--list-providers":
         flags.listProviders = true;
@@ -104,6 +112,10 @@ function parseFlags(argv: string[]): Flags {
     }
   }
   return flags;
+}
+
+function fmtNs(ns: number): string {
+  return Number.isNaN(ns) ? "—" : `${(ns / 1e6).toFixed(0)}ms`;
 }
 
 function main(): Promise<void> {
@@ -199,6 +211,50 @@ async function run(): Promise<void> {
   }
 
   const { runBenchmark, makeRunId } = await import("@agentbench/core");
+
+  if (flags.sustained !== null) {
+    const { runSustainedLoop } = await import("@agentbench/core");
+    const total = flags.sustained * providers.length;
+    let done = 0;
+    const results: { report: Awaited<ReturnType<typeof runSustainedLoop>>["report"]; outPath: string }[] = [];
+
+    for (const provider of providers) {
+      const { records, report } = await runSustainedLoop({
+        provider,
+        n: flags.sustained,
+        url: flags.url,
+        region: flags.region,
+        outDir: flags.out,
+        onCycle: (r) => {
+          const label = r.warmup ? "warmup" : r.success ? "ok" : "FAIL";
+          console.log(
+            `  [${++done}/${total}] ${r.provider} ${label}${r.full_round_trip_ns !== undefined ? ` ${(r.full_round_trip_ns / 1e6).toFixed(0)}ms` : ""}`
+          );
+        },
+      });
+      results.push({ report, outPath: "" } as never);
+      void records;
+    }
+
+    console.log("\n== sustained agent loop (first-third vs last-third) ==\n");
+    for (const { report } of results) {
+      const fms = report.firstThird;
+      const lms = report.lastThird;
+      const deg =
+        Number.isNaN(report.degradationP95Ns)
+          ? "—"
+          : `${(report.degradationP95Ns / 1e6 >= 0 ? "+" : "")}${(report.degradationP95Ns / 1e6).toFixed(0)}ms`;
+      console.log(
+        `${report.provider}: ${report.ok}/${report.cycles} ok | ` +
+          `p50 ${fmtNs(fms.p50)}→${fmtNs(lms.p50)} | ` +
+          `p95 ${fmtNs(fms.p95)}→${fmtNs(lms.p95)} | ` +
+          `errors ${fms.errors}→${lms.errors} | degradation(p95) ${deg}`
+      );
+    }
+    await Promise.all(providers.map((p) => p.dispose()));
+    return;
+  }
+
   const runId = makeRunId();
   console.log(
     `run ${runId} | providers: ${providers.map((p) => p.name).join(", ")} | n=${flags.n} warmup=${flags.warmup} | region=${flags.region}`
