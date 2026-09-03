@@ -1,4 +1,6 @@
-import { createRequire } from "node:module";
+import { readFileSync } from "node:fs";
+import { dirname, join, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Solari } from "@solarisdk/browser";
 import {
   PhaseTimer,
@@ -114,10 +116,17 @@ export class SolariBrowserProvider implements BrowserProviderAdapter {
 }
 
 export function sdkVersion(pkg: string): string {
-  try {
-    const req = createRequire(import.meta.url);
-    return (req(`${pkg}/package.json`) as { version: string }).version;
-  } catch {
-    return "unknown";
+  // createRequire + exports-restricted packages fail to resolve
+  // `${pkg}/package.json`; walk node_modules upward instead.
+  const here = dirname(fileURLToPath(import.meta.url));
+  const segments = here.split(sep);
+  for (let i = segments.length - 1; i > 0; i--) {
+    const path = join(segments.slice(0, i).join(sep), "node_modules", pkg, "package.json");
+    try {
+      return (JSON.parse(readFileSync(path, "utf8")) as { version: string }).version;
+    } catch {
+      continue;
+    }
   }
+  return "unknown";
 }

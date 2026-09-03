@@ -1,5 +1,6 @@
 import type { BrowserProviderAdapter, CycleRecord } from "./types.js";
 import { runBenchmark } from "./runner.js";
+import { percentile } from "./stats.js";
 
 export interface SustainedReport {
   provider: string;
@@ -14,11 +15,7 @@ export interface SustainedReport {
 function percentileOf(samples: number[], p: number): number {
   if (samples.length === 0) return Number.NaN;
   const sorted = [...samples].sort((a, b) => a - b);
-  const rank = (sorted.length - 1) * p;
-  const lo = Math.floor(rank);
-  const hi = Math.ceil(rank);
-  if (lo === hi) return sorted[lo] as number;
-  return (sorted[lo] as number) * (1 - (rank - lo)) + (sorted[hi] as number) * rank;
+  return percentile(sorted, p);
 }
 
 function sliceStats(records: CycleRecord[]): { p50: number; p95: number; errors: number } {
@@ -26,12 +23,7 @@ function sliceStats(records: CycleRecord[]): { p50: number; p95: number; errors:
     .filter((r) => r.success && r.full_round_trip_ns !== undefined)
     .map((r) => r.full_round_trip_ns as number)
     .sort((a, b) => a - b);
-  const errors = records.filter((r) => !r.success).length;
-  const pick = (p: number): number =>
-    trips.length === 0
-      ? Number.NaN
-      : (trips[Math.min(trips.length - 1, Math.floor((trips.length - 1) * p))] as number);
-  return { p50: pick(0.5), p95: pick(0.95), errors: records.length - trips.length };
+  return { p50: percentileOf(trips, 0.5), p95: percentileOf(trips, 0.95), errors: records.length - trips.length };
 }
 
 /**

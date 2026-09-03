@@ -1,17 +1,105 @@
 {
-  "_comment": "Published list prices for cost-per-1k-sessions. Every entry needs a last_verified date; entries older than 90 days are flagged stale and excluded from headline numbers. null = not yet verified, do not guess.",
+  "_comment": "Published list prices for cost-per-1k-sessions. Every entry needs a last_verified date; entries older than 90 days are flagged stale and excluded from headline numbers. null = not yet verified, do not guess. Headline values are entry-tier (free/pay-as-you-go/overage) list rates; plan-specific discounts are noted per vendor. Derived unit conversions (hour<->second) are exact arithmetic from published rates and labeled 'derived'.",
   "browser": {
-    "solari": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://getsolari.com/pricing" },
-    "browserbase": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://www.browserbase.com/pricing" },
-    "steel": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://steel.dev/pricing" },
-    "kernel": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://kernel.sh/pricing" },
-    "hyperbrowser": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://hyperbrowser.ai/pricing" },
-    "anchor": { "session_hour_usd": null, "per_session_usd": null, "last_verified": null, "source": "https://anchorbrowser.io/pricing" }
+    "solari": {
+      "session_hour_usd": 0.15,
+      "per_session_usd": null,
+      "last_verified": "2026-09-02",
+      "source": "https://docs.getsolari.com/pricing",
+      "unit": "USD per browser-session-hour, billed while session is open",
+      "plan_rates_usd_per_hour": { "free": 0.15, "starter": 0.10, "professional": 0.07, "enterprise": 0.05 },
+      "free_tier": { "monthly_credits_usd": 3, "concurrent_browsers": 3, "max_session_hours": 1, "replay_retention": "1 day" },
+      "note": "No flat per-session fee. Starter $0.10/hr, Professional $0.07/hr, Enterprise $0.05/hr. Captcha $0.01/solve (Starter) and proxies $1.00/GB (Starter) billed separately. Plans: Free $0, Starter $20/mo, Professional $200/mo."
+    },
+    "browserbase": {
+      "session_hour_usd": 0.12,
+      "per_session_usd": null,
+      "last_verified": "2026-09-02",
+      "source": "https://www.browserbase.com/pricing",
+      "unit": "USD per browser hour (overage after included hours)",
+      "startup_overage_usd_per_hour": 0.10,
+      "free_tier": { "browser_hours_included": 1, "concurrent_browsers": 3, "max_session_minutes": 15, "search_calls": 1000, "fetch_calls": 1000 },
+      "developer_plan": { "price_usd_per_month": 20, "browser_hours_included": 100 },
+      "startup_plan": { "price_usd_per_month": 99, "browser_hours_included": 500 },
+      "note": "No standalone pay-as-you-go browser-hour list price; $0.12/browser hr is the Developer-plan overage after 100 included hours, $0.10/browser hr the Startup-plan overage after 500."
+    },
+    "steel": {
+      "session_hour_usd": 0.10,
+      "per_session_usd": null,
+      "last_verified": "2026-09-02",
+      "source": "https://docs.steel.dev/overview/pricinglimits",
+      "unit": "USD per browser hour, billed by the minute rounded up",
+      "scale_rate_usd_per_hour": 0.08,
+      "free_tier": { "one_time_credits_usd": 30, "credits_validity": "one-time, 90 days", "concurrent_sessions": 10, "max_session_minutes": 15 },
+      "note": "Launch (free) rate is $0.10/browser hour; Scale plan ($250/mo, $100/mo credits) drops to $0.08/browser hour. Proxy $10/GB (Launch), $6/GB (Scale); CAPTCHA $3/1k (Launch), $1/1k (Scale)."
+    },
+    "kernel": {
+      "session_hour_usd": 0.06,
+      "per_session_usd": null,
+      "last_verified": "2026-09-02",
+      "source": "https://kernel.sh/docs/info/pricing",
+      "unit": "USD per second of active browser runtime (published rate is per GB-second; headless browser = 1 GB)",
+      "per_second_usd_headless": 0.0000166667,
+      "per_second_usd_headful": 0.0001333336,
+      "per_second_usd_headful_gpu": 0.0008000016,
+      "free_tier": { "monthly_credits_usd": 5, "concurrent_browsers": 5 },
+      "note": "Billed per GB-second, no charges for idle time (Standby Mode) or proxies. Headful = 8x headless, headful+GPU = 48x. session_hour_usd ($0.06) is derived: $0.0000166667/s x 3600 for headless. Plans: Free $0, Hobbyist $30/mo, Start-Up $200/mo."
+    },
+    "hyperbrowser": {
+      "session_hour_usd": 0.10,
+      "per_session_usd": null,
+      "last_verified": "2026-09-02",
+      "source": "https://docs.hyperbrowser.ai/pricing",
+      "unit": "USD per browser session hour (100 credits/hour, 1 credit = $0.001)",
+      "free_tier": null,
+      "note": "Public marketing pricing page (hyperbrowser.ai/pricing) is JS-only and yielded no plan or free-tier data on multiple fetch attempts; subscription plan prices and free credits remain unverified. Usage rates verified from docs: browser usage $0.10/hour, proxy $10/GB."
+    },
+    "anchor": {
+      "session_hour_usd": 0.05,
+      "per_session_usd": 0.01,
+      "last_verified": "2026-09-02",
+      "source": "https://docs.anchorbrowser.io/pricing",
+      "unit": "session_hour_usd = USD per browser hour of active time (billed to nearest full minute); per_session_usd = one-time browser creation fee",
+      "free_tier": { "monthly_credits_usd": 5, "concurrent_browsers": 5 },
+      "plans_usd_per_month": { "starter": 50, "team": 500, "growth": 2000 },
+      "note": "Infrastructure pricing (usage without tasks): $0.01/browser creation + $0.05/browser hour; Anchor Proxy $8/GB ($0.2/GB egress proxyless or BYO); AI steps $0.01-$0.10/step. Task-based plans charge 0.1 credits per completed task ($1.00/credit overage). Homepage also lists a Team tier at $500/mo not shown in the docs pricing table."
+    }
   },
   "sandbox": {
-    "solari": { "per_second_usd": null, "last_verified": null, "source": "https://getsolari.com/pricing" },
-    "e2b": { "per_second_usd": null, "last_verified": null, "source": "https://e2b.dev/pricing" },
-    "daytona": { "per_second_usd": null, "last_verified": null, "source": "https://www.daytona.io/pricing" },
+    "solari": {
+      "per_second_usd": 0.0000475,
+      "last_verified": "2026-09-02",
+      "source": "https://docs.getsolari.com/pricing",
+      "unit": "USD per second, derived from published $0.171/hr for 2 vCPU / 4 GB sandbox on Free plan",
+      "per_vcpu_hour_usd": { "free": 0.0525, "starter": 0.035, "professional": 0.0245 },
+      "per_gb_hour_usd": { "free": 0.0165, "starter": 0.011, "professional": 0.0077 },
+      "hourly_usd_2vcpu_4gb": { "free": 0.171, "starter": 0.114, "professional": 0.08 },
+      "free_tier": { "monthly_credits_usd": 3, "concurrent_sandboxes_or_desktops": 1, "max_session_hours": 1 },
+      "note": "Billed by size (vCPUs + memory) at hourly rates; desktops/VMs add $0.02/hr live-screen rate. Starter 2vCPU/4GB = $0.114/hr, Professional = $0.080/hr."
+    },
+    "e2b": {
+      "per_second_usd": 0.000028,
+      "last_verified": "2026-09-02",
+      "source": "https://e2b.dev/pricing",
+      "unit": "USD per second for default 2-vCPU sandbox (CPU only; RAM billed separately per GiB)",
+      "cpu_per_vcpu_per_second_usd": 0.000014,
+      "ram_per_gib_per_second_usd": 0.0000045,
+      "free_tier": { "one_time_credits_usd": 100, "concurrent_sandboxes": 20, "max_session_hours": 1 },
+      "pro_plan_usd_per_month": 150,
+      "note": "Charged per second of a running sandbox. CPU: $0.000014/s per vCPU (2 vCPU default = $0.000028/s; 1 vCPU = $0.000014/s, 4 vCPU = $0.000056/s). RAM $0.0000045/GiB/s, customizable 512 MiB-8 GiB on Pro. Storage free up to 10 GiB (Hobby) / 20 GiB (Pro)."
+    },
+    "daytona": {
+      "per_second_usd": 0.000046,
+      "last_verified": "2026-09-02",
+      "source": "https://www.daytona.io/pricing",
+      "unit": "USD per second, derived from published hourly rates for 2 vCPU / 4 GiB (2x$0.0504 + 4x$0.0162 = $0.1656/hr)",
+      "vcpu_usd_per_hour": 0.0504,
+      "memory_usd_per_gib_hour": 0.0162,
+      "storage_usd_per_gib_hour": 0.000108,
+      "storage_free_gib": 5,
+      "free_credits_usd": 200,
+      "note": "All billing calculated per second; pay-as-you-go with $200 free compute. Windows adds $0.0858/vCPU/h. GPUs $0.57/hr (RTX 4090) to $2.61/hr (H200). First 5 GiB storage free."
+    },
     "modal": { "per_second_usd": null, "last_verified": null, "source": "https://modal.com/pricing", "note": "no official Node SDK; not measured" }
   }
 }

@@ -56,9 +56,9 @@ jobs:
           CONTROL_PAGE_URL: ${{ secrets.CONTROL_PAGE_URL }}
         run: |
           if [ "${{ inputs.quick }}" = "true" ]; then
-            npm run bench -- --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 2 --warmup 1
+            npm run bench -- --region ubuntu-latest --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 2 --warmup 1
           else
-            npm run bench -- --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n ${{ inputs.n || 50 }} --warmup 3
+            npm run bench -- --region ubuntu-latest --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n ${{ inputs.n || 50 }} --warmup 3
           fi
 
       - name: Stealth gauntlet
@@ -72,9 +72,9 @@ jobs:
           ANCHORBROWSER_API_KEY: ${{ secrets.ANCHORBROWSER_API_KEY }}
         run: |
           if [ "${{ inputs.quick }}" = "true" ]; then
-            npm run bench -- stealth --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 2 --warmup 0
+            npm run bench -- stealth --region ubuntu-latest --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 2 --warmup 0
           else
-            npm run bench -- stealth --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 10 --warmup 1
+            npm run bench -- stealth --region ubuntu-latest --providers solari,steel,kernel,hyperbrowser,browserbase,anchor --n 10 --warmup 1
           fi
 
       - name: Sandbox
@@ -84,9 +84,9 @@ jobs:
           DAYTONA_API_KEY: ${{ secrets.DAYTONA_API_KEY }}
         run: |
           if [ "${{ inputs.quick }}" = "true" ]; then
-            npm run bench -- --primitive sandbox --providers solari,e2b,daytona --n 2 --warmup 1
+            npm run bench -- --region ubuntu-latest --primitive sandbox --providers solari,e2b,daytona --n 2 --warmup 1
           else
-            npm run bench -- --primitive sandbox --providers solari,e2b,daytona --n ${{ inputs.n || 30 }} --warmup 3
+            npm run bench -- --region ubuntu-latest --primitive sandbox --providers solari,e2b,daytona --n ${{ inputs.n || 30 }} --warmup 3
           fi
 
       - name: Commit raw data

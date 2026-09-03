@@ -12,8 +12,9 @@
 
   Deterministic payload: the body contains ~80 KiB of inline HTML. Every
   consumer treats this file as immutable; content changes bump the version
-  in METHODOLOGY.md. Cache-busting is done with a per-cycle query string by
-  the harness, so edge caches still serve but browser caches never do.
+  in METHODOLOGY.md. Each benchmark cycle runs in a fresh browser session,
+  so no browser cache is involved; the CDN edge cache is common to every
+  provider and therefore not a differential.
 -->
 </head>
 <body>

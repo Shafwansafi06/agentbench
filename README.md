@@ -6,11 +6,13 @@
 Vendor benchmarks are marketing. This one runs on a schedule, in public, with
 the code and the raw data open.
 
-- **Live dashboard:** https://agentbench-kuo0429h2-on-chaineds-projects.vercel.app
-- **Data API:** https://agentbench-kuo0429h2-on-chaineds-projects.vercel.app/summary.json
+- **Live dashboard:** https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app
+- **Data API:** https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app/summary.json
+- **Raw data:** `data/runs/` in this repo — append-only JSONL, committed by CI.
 
-**Status: under active construction.** METHODOLOGY.md is a DRAFT — numbers are
-preliminary until it is finalized and dated there.
+**Status: running.** Methodology was finalized and committed on 2026-09-02
+(see METHODOLOGY.md) before any published results were generated. CI runs
+the full suite on a 6-hour cron and commits the raw JSONL to `data/runs/`.
 
 ## Quickstart
 
@@ -37,6 +39,26 @@ nanosecond phase timestamps, committed to the repo.
 - **Extensible.** A provider is one small interface
   (`BrowserProviderAdapter`) plus one line in the registry.
 
+## Why trust these numbers
+
+See [METHODOLOGY.md](METHODOLOGY.md) for the full protocol. The short
+version:
+
+- **Interleaved execution** — providers are round-robined within every
+  cycle, so network conditions and time-of-day hit everyone equally.
+- **Raw data is committed** — every row carries raw nanosecond phase
+  timestamps, the harness git hash, and SDK versions; metrics are
+  recomputable by anyone from the committed JSONL.
+- **Failures are published** — failed cycles appear in the data with their
+  error strings. Nothing is filtered after the fact.
+- **Pre-registered methodology** — finalized and dated 2026-09-02 before
+  published results existed; changes only as new dated entries.
+
+## Contributing
+
+Add a provider in under 30 minutes, run locally, and the data rules live in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Roadmap
 
 - [x] 6 browser providers: Solari, Browserbase, Steel, Kernel, Hyperbrowser, Anchor
@@ -48,6 +70,7 @@ nanosecond phase timestamps, committed to the repo.
 - [ ] 3-region matrix (needs paid GH runners — standard runners disclose no region)
 - [ ] Pricing verification + cost per 1k sessions
 - [ ] Third-party gauntlet sites (CreepJS, sannysoft) — flaky, so self-contained checks ship first
-- [ ] npm publish + contributor guide
+- [ ] npm publish
+- [x] Contributor guide (CONTRIBUTING.md)
 
 MIT licensed.

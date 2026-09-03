@@ -32,6 +32,7 @@ function percentileOf(samples: number[], p: number): number {
 }
 
 function main(): void {
+  let skippedNonControl = 0;
   const files = readdirSync(DATA_DIR).filter((f) => f.endsWith(".jsonl"));
   const byKey = new Map<string, { trips: number[]; ok: number; total: number; phases: Map<string, number[]>; nav: Map<string, number[]> }>();
   const stealthBy = new Map<string, { total: number; passed: number; checks: Map<string, number[]>; cycles: number }>();
@@ -44,6 +45,14 @@ function main(): void {
 
     for (const r of rows) {
       if (r.warmup) continue;
+
+      // Methodology rule: latency analysis excludes rows measured against a
+      // different navigation target than the current control page (early
+      // development runs used example.com). Sandbox rows carry url "".
+      if (r.primitive === "browser" && !String(r.url ?? "").includes("vercel.app")) {
+        skippedNonControl++;
+        continue;
+      }
 
       if (r.primitive === "stealth") {
         const rec = r as unknown as { checks: Record<string, boolean>; checks_passed: number; checks_total: number; success: boolean };
@@ -157,6 +166,8 @@ function main(): void {
   const summary = {
     schema_version: 1,
     generated_at: new Date().toISOString(),
+    control_page_filter: "browser rows only; url must contain vercel.app (current control page)",
+    skipped_non_control_rows: skippedNonControl,
     aggregates,
   };
   writeFileSync(OUT, JSON.stringify(summary, null, 2) + "\n");

@@ -44,7 +44,7 @@ Options:
   --warmup      discarded warmup cycles per provider (default 3)
   --sustained   sustained agent-loop mode: N sequential cycles per provider,
                 reports p95 degradation first-third vs last-third
-  --url         navigation target (default: dev placeholder, see METHODOLOGY)
+  --url         navigation target (default: pinned Vercel control page)
   --region      runner region label (default "local"; CI sets us-east etc.)
   --out         output directory for JSONL (default data/runs)`);
   process.exit(0);
