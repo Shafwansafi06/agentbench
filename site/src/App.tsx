@@ -42,11 +42,13 @@ export default function App() {
   }, []);
 
   return (
-    <div className="ab-bg" ref={orbsRef}>
-      <div className="ab-grid" />
-      <div className="ab-orb ab-orb--1" />
-      <div className="ab-orb ab-orb--2" />
-      <div className="ab-orb ab-orb--3" />
+    <>
+      <div className="ab-bg" ref={orbsRef}>
+        <div className="ab-grid" />
+        <div className="ab-orb ab-orb--1" />
+        <div className="ab-orb ab-orb--2" />
+        <div className="ab-orb ab-orb--3" />
+      </div>
 
       <main className="ab-shell">
         <header className="ab-hero">
@@ -109,6 +111,6 @@ export default function App() {
           </span>
         </footer>
       </main>
-    </div>
+    </>
   );
 }

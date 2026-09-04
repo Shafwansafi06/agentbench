@@ -15,12 +15,19 @@
 
 html { scroll-behavior: smooth; }
 
+html, body {
+  height: auto;
+  min-height: 100%;
+}
+
 body {
   background: var(--bg);
   color: var(--fg);
   font: 15px/1.6 "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 ::selection { background: rgba(94, 234, 212, 0.25); }
