@@ -14,7 +14,7 @@
 
 ## 1. Primary LinkedIn/X post
 
-A provider advertises 199ms session-create. The raw API hits that number. The SDK-ready session your agent actually gets measures ~2.7s — create and connect are fused inside their SDK, so the quoted number and the experienced one are different measurements of different things. The equivalent split-measured session_create on Kernel: 278ms. Neither number is wrong. But if you're paying for browser sessions for AI agents, you should know which one you're buying.
+A provider advertises 199ms session-create. The raw API hits that number. The SDK-ready session your agent actually gets — the one where create and connect are fused inside their SDK — measures 523ms from a US datacenter and ~2.7s from South Asia on the same harness. Kernel's split-measured session_create: 116ms (US). Neither number is wrong. But if you're paying for browser sessions for AI agents, you should know which one you're buying — and from where you're buying.
 
 That's why I built agentbench: a continuously-running, reproducible benchmark for cloud browser and sandbox providers serving AI agents. Vendor benchmarks are marketing — self-run, happy-path, stale the day they're posted. As far as I can tell, nobody runs this comparison on a schedule, in public, with raw data anyone can audit. A one-off benchmark can't be rechecked. This one can.
 
@@ -23,13 +23,13 @@ Live dashboard: https://agentbench-live.vercel.app
 
 Early numbers — small N, preliminary, growing (raw data committed to the repo):
 
-• Full round trip p50: Solari 4.1s · Kernel 4.2s · Hyperbrowser 4.6s · Steel 5.7s
+• Full round trip p50 from GitHub US runners: Kernel 0.83s · Solari 0.92s · Hyperbrowser 1.5s · Steel 2.0s. The same harness run from South Asia measured every provider 3–5x slower — where your runner lives matters as much as who your vendor is.
 • Stealth gauntlet (7 self-contained fingerprint checks): Kernel 86% · Hyperbrowser 71% · Steel 57% · Solari 43%. Solari's headless image fails the plugins, chrome-object, and WebGL-GPU checks; Kernel runs headful. Fingerprintability is an agent-reliability cost, not just a privacy one.
-• Solari sandbox: 1MB file write, p50 ~6.3s
+• Same harness, two networks: Solari sandbox 1MB file write p50 was ~6.3s from South Asia, 516ms from a US runner.
 
 Methodology, so you can check the work: providers are round-robined within every cycle (kills time-of-day bias), warmups are disclosed, every phase boundary is stored as a raw nanosecond timestamp in JSONL, and metrics are recomputed — never pre-aggregated — as p50/p95/p99 with bootstrap 95% CIs. Fused phases are marked fused in the data, never presented as splits. Think I misconfigured a provider? Open an issue and I'll rerun it.
 
-Tagging Solari and Harry Chow because their product is what I had in the browser tab when this started. Their numbers run in both directions in my data — fastest first_navigation (328ms p50), best DOM-content-loaded (35.7ms) — plus the fused-phase gap above. Everything is in the repo, raw. This is an independent measurement, not a pitch: numbers up, numbers down, all published.
+Tagging Solari and Harry Chow because their product is what I had in the browser tab when this started. Their numbers run in both directions in my data — fastest first_navigation in the current run (99ms p50), best full round trip of any headless image — plus the fused-phase gap above. Everything is in the repo, raw. This is an independent measurement, not a pitch: numbers up, numbers down, all published.
 
 ---
 
