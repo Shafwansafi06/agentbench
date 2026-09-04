@@ -3,7 +3,7 @@
 **Pre-flight before posting:**
 
 - [ ] Re-verify every number below against the latest `data/summary.json` (numbers are preliminary; N grows before launch).
-- [ ] Confirm dashboard URL is current: https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app
+- [ ] Confirm dashboard URL is current: https://agentbench-live.vercel.app
 - [ ] On LinkedIn/X, replace plain-text names "Harry Chow" and "Solari" with the actual taggable accounts while composing.
 - [ ] Send OUTREACH.md emails BEFORE this goes public (methodology rule 3).
 - [ ] Insert real star/cycle counts in the week-1 follow-up.
@@ -19,7 +19,7 @@ A provider advertises 199ms session-create. The raw API hits that number. The SD
 That's why I built agentbench: a continuously-running, reproducible benchmark for cloud browser and sandbox providers serving AI agents. Vendor benchmarks are marketing — self-run, happy-path, stale the day they're posted. As far as I can tell, nobody runs this comparison on a schedule, in public, with raw data anyone can audit. A one-off benchmark can't be rechecked. This one can.
 
 Repo: https://github.com/Shafwansafi06/agentbench
-Live dashboard: https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app
+Live dashboard: https://agentbench-live.vercel.app
 
 Early numbers — small N, preliminary, growing (raw data committed to the repo):
 
@@ -57,7 +57,7 @@ Show HN: Agentbench – a continuously-running, reproducible benchmark for AI-ag
 
 Agents burn most of their latency budget on things nobody benchmarks: session creation, CDP attach, first navigation, teardown. Each provider publishes its own numbers, on its own happy path, once — and those numbers can't be rerun or audited. Agentbench runs the same harness against six browser providers (Solari, Browserbase, Steel, Kernel, Hyperbrowser, Anchor) and three sandbox providers (Solari, E2B, Daytona; Modal has no Node SDK, listed as not measured) on a schedule, and commits everything: raw nanosecond phase timestamps per cycle in JSONL, recomputed p50/p95/p99 with bootstrap 95% CIs, warmups disclosed, providers round-robined within every cycle so time-of-day can't bias a run. Where a SDK fuses phases (Solari's `launch()` fuses create+connect), the data says so explicitly instead of letting the fused span masquerade as a split. There's also a stealth gauntlet — seven self-contained fingerprint checks — because a fingerprintable browser is an agent-reliability problem, not just a privacy one.
 
-Current numbers are preliminary and small-N (they grow every scheduled run), but the shape is already interesting: full round trip p50 Solari 4.1s, Kernel 4.2s, Hyperbrowser 4.6s, Steel 5.7s; stealth pass rates Kernel 86%, Hyperbrowser 71%, Steel 57%, Solari 43% (headless image fails plugins/chrome-object/WebGL-GPU; Kernel is headful). Solari's marketed "199ms session create" is a raw-API figure; the SDK-ready session measures ~2.7s. Repo: https://github.com/Shafwansafi06/agentbench — dashboard: https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app — you can rerun any of it with `npm run bench`. Providers are notified before publication and get their say; if you think I misconfigured one, open an issue and I'll rerun. Roadmap: 3-region matrix, cost per 1k sessions, third-party gauntlet sites (CreepJS, sannysoft) once they stop being flaky. What would you measure that I'm not?
+Current numbers are preliminary and small-N (they grow every scheduled run), but the shape is already interesting: full round trip p50 Solari 4.1s, Kernel 4.2s, Hyperbrowser 4.6s, Steel 5.7s; stealth pass rates Kernel 86%, Hyperbrowser 71%, Steel 57%, Solari 43% (headless image fails plugins/chrome-object/WebGL-GPU; Kernel is headful). Solari's marketed "199ms session create" is a raw-API figure; the SDK-ready session measures ~2.7s. Repo: https://github.com/Shafwansafi06/agentbench — dashboard: https://agentbench-live.vercel.app — you can rerun any of it with `npm run bench`. Providers are notified before publication and get their say; if you think I misconfigured one, open an issue and I'll rerun. Roadmap: 3-region matrix, cost per 1k sessions, third-party gauntlet sites (CreepJS, sannysoft) once they stop being flaky. What would you measure that I'm not?
 
 ---
 
@@ -81,7 +81,7 @@ So I built agentbench: a harness that runs the same measurement against six brow
 - A stealth gauntlet of 7 self-contained fingerprint checks — a fingerprintable browser gets your agent blocked mid-task, so this is reliability, not just privacy.
 
 Repo: https://github.com/Shafwansafi06/agentbench
-Dashboard (updates from scheduled runs): https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app
+Dashboard (updates from scheduled runs): https://agentbench-live.vercel.app
 
 Early results, preliminary and small-N (N grows each run):
 

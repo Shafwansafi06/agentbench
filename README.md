@@ -6,8 +6,8 @@
 Vendor benchmarks are marketing. This one runs on a schedule, in public, with
 the code and the raw data open.
 
-- **Live dashboard:** https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app
-- **Data API:** https://agentbench-n9l42d8d9-on-chaineds-projects.vercel.app/summary.json
+- **Live dashboard:** https://agentbench-live.vercel.app
+- **Data API:** https://agentbench-live.vercel.app/summary.json
 - **Raw data:** `data/runs/` in this repo — append-only JSONL, committed by CI.
 
 **Status: running.** Methodology was finalized and committed on 2026-09-02

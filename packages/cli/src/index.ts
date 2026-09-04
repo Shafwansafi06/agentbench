@@ -13,7 +13,7 @@ import { compositeTable, failedCycles, phaseTable } from "./table.js";
  * isolates provider overhead from third-party CDN noise — never point
  * published numbers at example.com.
  */
-const CONTROL_PAGE_URL = "https://control-page-dzsxszhwb-on-chaineds-projects.vercel.app";
+const CONTROL_PAGE_URL = "https://control-page-live.vercel.app";
 
 interface Flags {
   primitive: "browser" | "sandbox";

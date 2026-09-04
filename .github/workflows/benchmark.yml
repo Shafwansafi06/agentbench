@@ -89,14 +89,26 @@ jobs:
             npm run bench -- --region ubuntu-latest --primitive sandbox --providers solari,e2b,daytona --n ${{ inputs.n || 30 }} --warmup 3
           fi
 
-      - name: Commit raw data
+      - name: Summarize + commit raw data
         run: |
+          npm run summarize
+          cp data/summary.json site/summary.json
           git config user.name "agentbench-bot"
           git config user.email "agentbench@users.noreply.github.com"
-          git add data/
+          git add data/ site/summary.json
           if git diff --cached --quiet; then
             echo "no new data"
           else
             git commit -m "data: scheduled run $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
             git push
           fi
+
+      - name: Redeploy dashboard
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        if: env.VERCEL_TOKEN != ''
+        run: |
+          cd site
+          npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"
+          DEPLOY_URL=$(npx vercel ls --prod 2>/dev/null | grep -m1 "$(jq -r .projectName .vercel/project.json)" | awk '{print $3}')
+          if [ -n "$DEPLOY_URL" ]; then npx vercel alias set "https://$DEPLOY_URL" agentbench-live --token "$VERCEL_TOKEN"; fi
