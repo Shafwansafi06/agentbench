@@ -1,183 +1,183 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-23T12:04:23.281Z",
+  "generated_at": "2026-09-24T05:40:18.365Z",
   "control_page_filter": "browser rows only; url must contain vercel.app (current control page)",
   "skipped_non_control_rows": 78,
   "aggregates": [
     {
       "provider": "hyperbrowser",
       "primitive": "browser",
-      "runs": 4010,
-      "cycles": 4010,
+      "runs": 4060,
+      "cycles": 4060,
       "success_rate": 1,
       "full_round_trip_ms": {
-        "p50": 1341.1422745,
-        "p95": 1742.0680209999998,
-        "p99": 2165.9631541699987,
+        "p50": 1345.123791,
+        "p95": 1741.83286975,
+        "p99": 2160.891610669999,
         "ci95_p95": [
-          1729.347399,
-          1752.357798
+          1728.81151,
+          1752.255782
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 301.5838595,
-          "p95": 450.30620615
+          "p50": 301.856811,
+          "p95": 452.14702314999994
         },
         "cdp_connect": {
-          "p50": 538.9692505,
-          "p95": 803.1428054999999
+          "p50": 538.6839665,
+          "p95": 802.53801345
         },
         "first_navigation": {
-          "p50": 289.7173715,
-          "p95": 359.55355569999995
+          "p50": 289.7962705,
+          "p95": 361.9479510499998
         },
         "teardown": {
-          "p50": 46.538277,
-          "p95": 73.88672629999999
+          "p50": 46.7850555,
+          "p95": 73.88350059999999
         }
       },
       "nav_breakdown_ms": {
         "dns": 0,
-        "tcp": 24.4,
+        "tcp": 24.5,
         "tls": 11.6,
         "ttfb": 3.2,
         "content": 18.7,
-        "dom_content_loaded": 236
+        "dom_content_loaded": 236.1
       }
     },
     {
       "provider": "kernel",
       "primitive": "browser",
-      "runs": 4010,
-      "cycles": 4010,
-      "success_rate": 0.5922693266832918,
+      "runs": 4060,
+      "cycles": 4060,
+      "success_rate": 0.5970443349753695,
       "full_round_trip_ms": {
-        "p50": 1332.188685,
-        "p95": 6752.661378999998,
-        "p99": 8127.3082743999985,
+        "p50": 1323.1130349999999,
+        "p95": 6721.664164299996,
+        "p99": 8126.11023855,
         "ci95_p95": [
-          6260.916733299992,
-          7046.4193142
+          6223.524855799999,
+          7037.276874349995
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 219.52666,
-          "p95": 5835.649862250001
+          "p50": 218.174876,
+          "p95": 5815.7135929
         },
         "cdp_connect": {
-          "p50": 540.401613,
-          "p95": 863.0003127999998
+          "p50": 535.5319465,
+          "p95": 863.6910765
         },
         "first_navigation": {
-          "p50": 162.914795,
-          "p95": 282.68139399999995
+          "p50": 162.169716,
+          "p95": 282.56507105000003
         },
         "teardown": {
-          "p50": 47.243911,
-          "p95": 77.38933399999996
+          "p50": 46.439153,
+          "p95": 77.52541775
         }
       },
       "nav_breakdown_ms": {
         "dns": 0,
-        "tcp": 30.6,
+        "tcp": 30.15,
         "tls": 9.9,
-        "ttfb": 44.3,
+        "ttfb": 44.349999999999994,
         "content": 2.2,
-        "dom_content_loaded": 111.6
+        "dom_content_loaded": 111.3
       }
     },
     {
       "provider": "solari",
       "primitive": "browser",
-      "runs": 4012,
-      "cycles": 4012,
-      "success_rate": 0.9962612163509471,
+      "runs": 4062,
+      "cycles": 4062,
+      "success_rate": 0.9923682914820285,
       "full_round_trip_ms": {
-        "p50": 779.561826,
-        "p95": 1256.6423856,
-        "p99": 1558.57035024,
+        "p50": 783.161961,
+        "p95": 1274.541593,
+        "p99": 1654.8856847999996,
         "ci95_p95": [
-          1231.599966,
-          1274.8594455999996
+          1251.539142,
+          1292.1781225
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 371.07937,
-          "p95": 701.3280195999997
+          "p50": 373.535256,
+          "p95": 721.793958
         },
         "cdp_connect": {
-          "p50": 127.977364,
-          "p95": 196.69798259999996
+          "p50": 128.405904,
+          "p95": 197.9562
         },
         "first_navigation": {
-          "p50": 123.525305,
-          "p95": 228.62584259999997
+          "p50": 124.372969,
+          "p95": 233.5375995
         },
         "teardown": {
-          "p50": 54.493283,
-          "p95": 236.35001419999998
+          "p50": 54.66506,
+          "p95": 236.658141
         }
       },
       "nav_breakdown_ms": {
         "dns": 0.6,
-        "tcp": 34.4,
-        "tls": 27.7,
+        "tcp": 34.5,
+        "tls": 27.8,
         "ttfb": 14.8,
-        "content": 8.5,
-        "dom_content_loaded": 71.9
+        "content": 8.6,
+        "dom_content_loaded": 72.1
       }
     },
     {
       "provider": "steel",
       "primitive": "browser",
-      "runs": 4011,
-      "cycles": 4011,
-      "success_rate": 0.9997506856145599,
+      "runs": 4061,
+      "cycles": 4061,
+      "success_rate": 0.9997537552327013,
       "full_round_trip_ms": {
-        "p50": 1942.2425935,
-        "p95": 8974.793943199998,
-        "p99": 17323.6522084699,
+        "p50": 1942.977353,
+        "p95": 9019.136069749988,
+        "p99": 17428.553950089983,
         "ci95_p95": [
-          8346.566479149998,
-          9420.273709
+          8457.040514899996,
+          9544.194309
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 407.260218,
-          "p95": 4799.791197500001
+          "p50": 409.616383,
+          "p95": 4947.134113
         },
         "cdp_connect": {
-          "p50": 862.494488,
-          "p95": 4807.992211399998
+          "p50": 862.7374145,
+          "p95": 4789.825800249997
         },
         "first_navigation": {
-          "p50": 220.43103,
-          "p95": 506.3258787999994
+          "p50": 221.10743300000001,
+          "p95": 502.62128454999925
         },
         "teardown": {
-          "p50": 93.643137,
-          "p95": 151.5278167
+          "p50": 90.884907,
+          "p95": 151.33454354999998
         }
       },
       "nav_breakdown_ms": {
-        "dns": 99.1,
+        "dns": 99.7,
         "tcp": 10.3,
-        "tls": 8.4,
+        "tls": 8.45,
         "ttfb": 2.4,
         "content": 13.3,
-        "dom_content_loaded": 167.5
+        "dom_content_loaded": 168.5
       }
     },
     {
       "provider": "solari",
       "primitive": "sandbox",
-      "runs": 2412,
-      "cycles": 2412,
-      "success_rate": 0.9995854063018242,
+      "runs": 2442,
+      "cycles": 2442,
+      "success_rate": 0.9873054873054873,
       "full_round_trip_ms": {
         "p50": 914.229564,
         "p95": 1333.933263,
@@ -214,8 +214,8 @@
     {
       "provider": "kernel",
       "primitive": "stealth",
-      "runs": 455,
-      "cycles": 455,
+      "runs": 460,
+      "cycles": 460,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
@@ -244,8 +244,8 @@
     {
       "provider": "solari",
       "primitive": "stealth",
-      "runs": 798,
-      "cycles": 798,
+      "runs": 808,
+      "cycles": 808,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
@@ -274,8 +274,8 @@
     {
       "provider": "hyperbrowser",
       "primitive": "stealth",
-      "runs": 802,
-      "cycles": 802,
+      "runs": 812,
+      "cycles": 812,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
@@ -304,8 +304,8 @@
     {
       "provider": "steel",
       "primitive": "stealth",
-      "runs": 802,
-      "cycles": 802,
+      "runs": 812,
+      "cycles": 812,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
