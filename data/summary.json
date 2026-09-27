@@ -1,99 +1,99 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-27T17:07:55.934Z",
+  "generated_at": "2026-09-27T21:32:07.743Z",
   "control_page_filter": "browser rows only; url must contain vercel.app (current control page)",
   "skipped_non_control_rows": 78,
   "aggregates": [
     {
       "provider": "hyperbrowser",
       "primitive": "browser",
-      "runs": 4760,
-      "cycles": 4760,
+      "runs": 4810,
+      "cycles": 4810,
       "success_rate": 1,
       "full_round_trip_ms": {
-        "p50": 1334.8904265,
-        "p95": 1737.5968343000004,
-        "p99": 2075.072360859999,
+        "p50": 1327.771729,
+        "p95": 1735.8231597000001,
+        "p99": 2071.2722239599966,
         "ci95_p95": [
-          1727.245432,
-          1750.187012
+          1725.5324719500002,
+          1748.460884
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 302.0277,
-          "p95": 452.46612950000014
+          "p50": 301.7595645,
+          "p95": 451.8687751
         },
         "cdp_connect": {
-          "p50": 536.1962295000001,
-          "p95": 801.8832979
+          "p50": 533.1241305,
+          "p95": 801.2129082000001
         },
         "first_navigation": {
-          "p50": 289.01573299999995,
-          "p95": 356.86365445
+          "p50": 288.42987,
+          "p95": 356.4826515000001
         },
         "teardown": {
-          "p50": 46.3962995,
-          "p95": 73.74888275
+          "p50": 46.1260305,
+          "p95": 73.73821255000001
         }
       },
       "nav_breakdown_ms": {
         "dns": 0,
-        "tcp": 23.8,
-        "tls": 11.6,
+        "tcp": 23.7,
+        "tls": 11.5,
         "ttfb": 3.2,
         "content": 18.7,
-        "dom_content_loaded": 235.5
+        "dom_content_loaded": 235.3
       }
     },
     {
       "provider": "kernel",
       "primitive": "browser",
-      "runs": 4760,
-      "cycles": 4760,
-      "success_rate": 0.5936974789915966,
+      "runs": 4810,
+      "cycles": 4810,
+      "success_rate": 0.5945945945945946,
       "full_round_trip_ms": {
-        "p50": 1303.1777415,
-        "p95": 6690.19464175,
-        "p99": 8110.11300675,
+        "p50": 1301.6084759999999,
+        "p95": 6689.15817625,
+        "p99": 8107.784878169999,
         "ci95_p95": [
-          6187.746941,
-          6961.633214
+          6188.46174994999,
+          6958.924213949999
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 218.01909,
-          "p95": 5791.252038799997
+          "p50": 217.762325,
+          "p95": 5768.5852608
         },
         "cdp_connect": {
-          "p50": 541.689044,
-          "p95": 864.727691
+          "p50": 544.7917580000001,
+          "p95": 863.9422632999997
         },
         "first_navigation": {
-          "p50": 160.15875499999999,
-          "p95": 279.36610525000003
+          "p50": 160.0239595,
+          "p95": 277.3750590499997
         },
         "teardown": {
-          "p50": 47.1370565,
-          "p95": 77.6394781
+          "p50": 47.411896,
+          "p95": 77.57490274999995
         }
       },
       "nav_breakdown_ms": {
         "dns": 0,
-        "tcp": 26.5,
+        "tcp": 26.2,
         "tls": 9.5,
         "ttfb": 44.6,
         "content": 2.1,
-        "dom_content_loaded": 108.7
+        "dom_content_loaded": 108.25
       }
     },
     {
       "provider": "solari",
       "primitive": "browser",
-      "runs": 4762,
-      "cycles": 4762,
-      "success_rate": 0.9514909701805964,
+      "runs": 4812,
+      "cycles": 4812,
+      "success_rate": 0.9416043225270158,
       "full_round_trip_ms": {
         "p50": 780.045389,
         "p95": 1280.8619334999999,
@@ -133,51 +133,51 @@
     {
       "provider": "steel",
       "primitive": "browser",
-      "runs": 4761,
-      "cycles": 4761,
-      "success_rate": 0.9993698802772527,
+      "runs": 4811,
+      "cycles": 4811,
+      "success_rate": 0.9993764290168364,
       "full_round_trip_ms": {
-        "p50": 1997.9064205,
-        "p95": 8583.841133899998,
-        "p99": 16216.459609170073,
+        "p50": 2002.3084720000002,
+        "p95": 8627.624065749998,
+        "p99": 16081.983956380094,
         "ci95_p95": [
-          8172.14351,
-          9063.473379899999
+          8198.939753499995,
+          9066.306272899998
         ]
       },
       "phases_ms": {
         "session_create": {
-          "p50": 436.335713,
-          "p95": 4774.439382
+          "p50": 438.32494,
+          "p95": 4794.628882999999
         },
         "cdp_connect": {
-          "p50": 877.252121,
-          "p95": 4661.837972600002
+          "p50": 877.4052899999999,
+          "p95": 4685.885525150002
         },
         "first_navigation": {
-          "p50": 227.372,
-          "p95": 460.1080938999993
+          "p50": 227.85259050000002,
+          "p95": 459.7537508499999
         },
         "teardown": {
-          "p50": 94.7429175,
-          "p95": 152.8231664
+          "p50": 96.6479695,
+          "p95": 152.86227040000003
         }
       },
       "nav_breakdown_ms": {
-        "dns": 105,
+        "dns": 105.2,
         "tcp": 10.3,
         "tls": 8.4,
         "ttfb": 2.3,
         "content": 13.3,
-        "dom_content_loaded": 173.1
+        "dom_content_loaded": 173.2
       }
     },
     {
       "provider": "solari",
       "primitive": "sandbox",
-      "runs": 2862,
-      "cycles": 2862,
-      "success_rate": 0.9472396925227113,
+      "runs": 2892,
+      "cycles": 2892,
+      "success_rate": 0.9374135546334716,
       "full_round_trip_ms": {
         "p50": 898.530631,
         "p95": 1338.9150455,
@@ -214,8 +214,8 @@
     {
       "provider": "kernel",
       "primitive": "stealth",
-      "runs": 540,
-      "cycles": 540,
+      "runs": 544,
+      "cycles": 544,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
@@ -274,8 +274,8 @@
     {
       "provider": "hyperbrowser",
       "primitive": "stealth",
-      "runs": 952,
-      "cycles": 952,
+      "runs": 962,
+      "cycles": 962,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
@@ -304,8 +304,8 @@
     {
       "provider": "steel",
       "primitive": "stealth",
-      "runs": 952,
-      "cycles": 952,
+      "runs": 962,
+      "cycles": 962,
       "success_rate": 1,
       "full_round_trip_ms": {
         "p50": null,
